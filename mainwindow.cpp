@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "QDebug"
+#include "QList"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_7, SIGNAL(clicked()), this, SLOT(btn_clicked()));
     connect(ui->pushButton_8, SIGNAL(clicked()), this, SLOT(btn_clicked()));
     connect(ui->pushButton_9, SIGNAL(clicked()), this, SLOT(btn_clicked()));
+
+    connect(this, SIGNAL(game_over(QList<QPushButton*>)), this, SLOT(game_over_msg(QList<QPushButton*>)));
 
     ui->statusBar->showMessage("Current: Player1 | Next: Player2");
 }
@@ -66,5 +69,18 @@ void MainWindow::btn_clicked()
             button->setText("O");
         }
     }
+
+
+    QList<QPushButton*> list = ui->centralWidget->findChildren<QPushButton*>();
+    ++clickcount;
+    if (clickcount == 9)
+    {
+        emit game_over(list);
+    }
+}
+
+void MainWindow::game_over_msg(QList<QPushButton*> list)
+{
+    qDebug() << "Game over" << list;
 }
 
